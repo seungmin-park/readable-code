@@ -14,7 +14,7 @@ public class EmptyCell extends Cell {
         if (isOpened) {
             return EMPTY_CELL_SIGN;
         }
-        if (isFlagged){
+        if (isFlagged) {
             return FLAG_SIGN;
         }
         return UNCHECKED_CELL_SIGN;

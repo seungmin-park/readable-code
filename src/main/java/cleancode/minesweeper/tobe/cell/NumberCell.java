@@ -17,7 +17,7 @@ public class NumberCell extends Cell {
         if (isOpened) {
             return String.valueOf(nearbyLandMineCount);
         }
-        if (isFlagged){
+        if (isFlagged) {
             return FLAG_SIGN;
         }
         return UNCHECKED_CELL_SIGN;
