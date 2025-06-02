@@ -35,6 +35,10 @@ public class CellSnapShot {
         return new CellSnapShot(CellSnapshotStatus.UNCHECKED, 0);
     }
 
+    public boolean isSameStatus(CellSnapshotStatus snapshotStatus) {
+        return this.status == snapshotStatus;
+    }
+
     public CellSnapshotStatus getStatus() {
         return status;
     }
