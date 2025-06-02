@@ -65,11 +65,6 @@ public class GameBoard {
         return board[0].length;
     }
 
-    public String getSign(CellPosition cellPosition) {
-        Cell findCell = findCell(cellPosition);
-        return findCell.getSign();
-    }
-
     // board에 집근하여 cell를 꺼내는 작업이 많네?
     private Cell findCell(CellPosition cellPosition) {
         return board[cellPosition.getRowIndex()][cellPosition.getColIndex()];
@@ -146,5 +141,10 @@ public class GameBoard {
     public boolean isAllCellChecked() {
         Cells cells = Cells.from(board);
         return cells.isAllChecked();
+    }
+
+    public CellSnapShot getCellSnapShot(CellPosition cellPosition) {
+        Cell cell = findCell(cellPosition);
+        return cell.getSnapShot();
     }
 }
