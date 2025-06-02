@@ -52,20 +52,6 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         }
     }
 
-    private void actOnCell(CellPosition cellPosition, UserAction userAction) {
-        if (doesUserChoseToPlantFlag(userAction)) {
-            // gameBoard.getSign() ~~ 하면 굉장히 무례
-            gameBoard.flagAt(cellPosition);
-            return;
-        }
-
-        if (doesUserChoseOpenCell(userAction)) {
-            gameBoard.openAt(cellPosition);
-        }
-
-        throw new GameException("잘못된 번호를 선택하셨습니다.");
-    }
-
     private CellPosition getCellInputFromUser() {
         outputHandler.showCommentForSelectingCell();
         CellPosition cellPosition = inputHandler.getCellPositionFromUser();
@@ -79,6 +65,20 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         outputHandler.showCommentForUserAction();
         return inputHandler.getUserActionFromUser();
 
+    }
+
+    private void actOnCell(CellPosition cellPosition, UserAction userAction) {
+        if (doesUserChoseToPlantFlag(userAction)) {
+            // gameBoard.getSign() ~~ 하면 굉장히 무례
+            gameBoard.flagAt(cellPosition);
+            return;
+        }
+
+        if (doesUserChoseOpenCell(userAction)) {
+            gameBoard.openAt(cellPosition);
+        }
+
+        throw new GameException("잘못된 번호를 선택하셨습니다.");
     }
 
     private boolean doesUserChoseToPlantFlag(UserAction userAction) {
