@@ -12,6 +12,7 @@ import java.util.List;
 
 public class StudyCafePassMachine {
 
+    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
     private final InputHandler inputHandler = new InputHandler();
     private final OutputHandler outputHandler = new OutputHandler();
 
@@ -50,14 +51,12 @@ public class StudyCafePassMachine {
             return;
         }
         if (studyCafePassType == StudyCafePassType.FIXED) {
-            StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
-
             List<StudyCafePass> fixedPasses = findStudyCafePasses(StudyCafePassType.FIXED);
 
             outputHandler.showPassListForSelection(fixedPasses);
             StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
 
-            StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(studyCafeFileHandler, selectedPass);
+            StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(selectedPass);
 
             boolean lockerSelection = false;
             if (lockerPass != null) {
@@ -73,7 +72,7 @@ public class StudyCafePassMachine {
         }
     }
 
-    private static StudyCafeLockerPass findStudyCafeLockerPass(StudyCafeFileHandler studyCafeFileHandler, StudyCafePass selectedPass) {
+    private StudyCafeLockerPass findStudyCafeLockerPass(StudyCafePass selectedPass) {
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
         StudyCafeLockerPass lockerPass = lockerPasses.stream()
                 .filter(option ->
@@ -85,8 +84,7 @@ public class StudyCafePassMachine {
         return lockerPass;
     }
 
-    private static List<StudyCafePass> findStudyCafePasses(StudyCafePassType studyCafePassType) {
-        StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+    private List<StudyCafePass> findStudyCafePasses(StudyCafePassType studyCafePassType) {
         List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
 
         return studyCafePasses.stream()
