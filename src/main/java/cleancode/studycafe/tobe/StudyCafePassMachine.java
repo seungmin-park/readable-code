@@ -17,10 +17,8 @@ public class StudyCafePassMachine {
 
     public void run() {
         try {
-            outputHandler.showWelcomeMessage();
-            outputHandler.showAnnouncement();
-
-            outputHandler.askPassTypeSelection();
+            outputHandler.showGameStartComments();
+            
             StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
 
             if (studyCafePassType == StudyCafePassType.HOURLY) {
