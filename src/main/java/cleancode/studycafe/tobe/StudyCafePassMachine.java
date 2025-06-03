@@ -18,49 +18,58 @@ public class StudyCafePassMachine {
     public void run() {
         try {
             outputHandler.showGameStartComments();
-            
+
             StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
 
-            if (studyCafePassType == StudyCafePassType.HOURLY) {
-                List<StudyCafePass> hourlyPasses = findStudyCafePasses(StudyCafePassType.HOURLY);
+            calculateStudyCafePrice(studyCafePassType);
 
-                outputHandler.showPassListForSelection(hourlyPasses);
-
-                StudyCafePass selectedPass = inputHandler.getSelectPass(hourlyPasses);
-                outputHandler.showPassOrderSummary(selectedPass, null);
-            } else if (studyCafePassType == StudyCafePassType.WEEKLY) {
-                List<StudyCafePass> weeklyPasses = findStudyCafePasses(StudyCafePassType.WEEKLY);
-
-                outputHandler.showPassListForSelection(weeklyPasses);
-
-                StudyCafePass selectedPass = inputHandler.getSelectPass(weeklyPasses);
-                outputHandler.showPassOrderSummary(selectedPass, null);
-            } else if (studyCafePassType == StudyCafePassType.FIXED) {
-                StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
-
-                List<StudyCafePass> fixedPasses = findStudyCafePasses(StudyCafePassType.FIXED);
-
-                outputHandler.showPassListForSelection(fixedPasses);
-                StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
-
-                StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(studyCafeFileHandler, selectedPass);
-
-                boolean lockerSelection = false;
-                if (lockerPass != null) {
-                    outputHandler.askLockerPass(lockerPass);
-                    lockerSelection = inputHandler.getLockerSelection();
-                }
-
-                if (lockerSelection) {
-                    outputHandler.showPassOrderSummary(selectedPass, lockerPass);
-                } else {
-                    outputHandler.showPassOrderSummary(selectedPass, null);
-                }
-            }
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
             outputHandler.showSimpleMessage("알 수 없는 오류가 발생했습니다.");
+        }
+    }
+
+    private void calculateStudyCafePrice(StudyCafePassType studyCafePassType) {
+        if (studyCafePassType == StudyCafePassType.HOURLY) {
+            List<StudyCafePass> hourlyPasses = findStudyCafePasses(StudyCafePassType.HOURLY);
+
+            outputHandler.showPassListForSelection(hourlyPasses);
+
+            StudyCafePass selectedPass = inputHandler.getSelectPass(hourlyPasses);
+            outputHandler.showPassOrderSummary(selectedPass, null);
+            return;
+        }
+        if (studyCafePassType == StudyCafePassType.WEEKLY) {
+            List<StudyCafePass> weeklyPasses = findStudyCafePasses(StudyCafePassType.WEEKLY);
+
+            outputHandler.showPassListForSelection(weeklyPasses);
+
+            StudyCafePass selectedPass = inputHandler.getSelectPass(weeklyPasses);
+            outputHandler.showPassOrderSummary(selectedPass, null);
+            return;
+        }
+        if (studyCafePassType == StudyCafePassType.FIXED) {
+            StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+
+            List<StudyCafePass> fixedPasses = findStudyCafePasses(StudyCafePassType.FIXED);
+
+            outputHandler.showPassListForSelection(fixedPasses);
+            StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
+
+            StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(studyCafeFileHandler, selectedPass);
+
+            boolean lockerSelection = false;
+            if (lockerPass != null) {
+                outputHandler.askLockerPass(lockerPass);
+                lockerSelection = inputHandler.getLockerSelection();
+            }
+
+            if (lockerSelection) {
+                outputHandler.showPassOrderSummary(selectedPass, lockerPass);
+                return;
+            }
+            outputHandler.showPassOrderSummary(selectedPass, null);
         }
     }
 
