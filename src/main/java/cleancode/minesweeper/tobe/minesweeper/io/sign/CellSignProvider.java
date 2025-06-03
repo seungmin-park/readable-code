@@ -49,11 +49,6 @@ public enum CellSignProvider implements CellSignProvidable {
         this.status = status;
     }
 
-    @Override
-    public boolean supports(CellSnapShot snapShot) {
-        return snapShot.isSameStatus(status);
-    }
-
     public static String findCellSignFrom(CellSnapShot snapShot) {
         CellSignProvider cellSignProvider = findBy(snapShot);
 
@@ -65,5 +60,10 @@ public enum CellSignProvider implements CellSignProvidable {
                 .filter(provider -> provider.supports(snapShot))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("확인할 수 없는 셀입니다."));
+    }
+
+    @Override
+    public boolean supports(CellSnapShot snapShot) {
+        return snapShot.isSameStatus(status);
     }
 }
