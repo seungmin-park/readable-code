@@ -22,7 +22,7 @@ public class StudyCafeLockerPasses {
 
     public StudyCafeLockerPass findStudyCafeLockerPass(StudyCafePass selectedPass) {
         return lockerPasses.stream()
-                .filter(option -> option.isSatisfiedAt(selectedPass))
+                .filter(option -> option.canBeUsedWith(selectedPass))
                 .findFirst()
                 .orElse(StudyCafeLockerPass.of(StudyCafePassType.FIXED, 0, 0));
     }

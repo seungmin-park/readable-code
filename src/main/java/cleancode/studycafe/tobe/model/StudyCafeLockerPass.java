@@ -16,7 +16,7 @@ public class StudyCafeLockerPass {
         return new StudyCafeLockerPass(passType, duration, price);
     }
 
-    public boolean isSatisfiedAt(StudyCafePass studyCafePass) {
+    public boolean canBeUsedWith(StudyCafePass studyCafePass) {
         return isSatisfiedPassType(studyCafePass) && isSatisfiedDuration(studyCafePass);
     }
 
