@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class ConsoleInputHandler implements InputHandler {
 
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final String LOCKER_USE_OPTION = "1";
 
     @Override
     public StudyCafePassType getPassTypeSelectingUserAction() {
@@ -27,7 +28,7 @@ public class ConsoleInputHandler implements InputHandler {
     @Override
     public boolean getLockerSelection() {
         String userInput = SCANNER.nextLine();
-        return "1".equals(userInput);
+        return LOCKER_USE_OPTION.equals(userInput);
     }
 
 }
