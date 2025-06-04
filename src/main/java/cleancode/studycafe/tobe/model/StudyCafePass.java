@@ -22,6 +22,10 @@ public class StudyCafePass {
         return this.passType == StudyCafePassType.FIXED;
     }
 
+    public boolean isNotFixed() {
+        return !isFixed();
+    }
+
     public StudyCafePassType getPassType() {
         return passType;
     }
