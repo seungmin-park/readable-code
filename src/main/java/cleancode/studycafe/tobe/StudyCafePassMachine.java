@@ -1,16 +1,19 @@
 package cleancode.studycafe.tobe;
 
 import cleancode.studycafe.tobe.exception.AppException;
+import cleancode.studycafe.tobe.io.ConsoleInputHandler;
+import cleancode.studycafe.tobe.io.ConsoleOutputHandler;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.reader.CsvStudyCafeDataReader;
+import cleancode.studycafe.tobe.io.reader.StudyCafeDataReader;
 import cleancode.studycafe.tobe.model.*;
 
 import java.util.List;
 
 public class StudyCafePassMachine {
 
-    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+    private final StudyCafeDataReader studyCafeDataReader = new CsvStudyCafeDataReader();
     private final InputHandler inputHandler = new ConsoleInputHandler();
     private final OutputHandler outputHandler = new ConsoleOutputHandler();
 
@@ -30,8 +33,8 @@ public class StudyCafePassMachine {
     }
 
     private void calculateStudyCafePrice(StudyCafePassType studyCafePassType) {
-        StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeFileHandler);
-        StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeFileHandler);
+        StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeDataReader);
+        StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeDataReader);
 
         List<StudyCafePass> selectedPasses = studyCafePasses.findStudyCafePasses(studyCafePassType);
         outputHandler.showPassListForSelection(selectedPasses);

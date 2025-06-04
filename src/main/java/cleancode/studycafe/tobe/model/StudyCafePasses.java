@@ -1,6 +1,6 @@
 package cleancode.studycafe.tobe.model;
 
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.reader.StudyCafeDataReader;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ public class StudyCafePasses {
         return new StudyCafePasses(studyCafePasses);
     }
 
-    public static StudyCafePasses from(StudyCafeFileHandler studyCafeFileHandler) {
-        List<StudyCafePass> readCafePasses = studyCafeFileHandler.readStudyCafePasses();
+    public static StudyCafePasses from(StudyCafeDataReader studyCafeDataReader) {
+        List<StudyCafePass> readCafePasses = studyCafeDataReader.readStudyCafePasses();
         return of(readCafePasses);
     }
 
