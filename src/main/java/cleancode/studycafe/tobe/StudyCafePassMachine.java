@@ -38,7 +38,7 @@ public class StudyCafePassMachine {
         StudyCafePass selectedPass = inputHandler.getSelectPass(selectedPasses);
         Order order = Order.ofWithoutLocker(selectedPass);
 
-        if (selectedPass.getPassType() == StudyCafePassType.FIXED) {
+        if (selectedPass.isFixed()) {
             StudyCafeLockerPass lockerPass = lockerPasses.findStudyCafeLockerPass(selectedPass);
             outputHandler.askLockerPass(lockerPass);
             boolean lockerSelection = inputHandler.getLockerSelection();
