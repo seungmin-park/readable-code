@@ -4,10 +4,7 @@ import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
 import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
-import cleancode.studycafe.tobe.model.Order;
-import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
-import cleancode.studycafe.tobe.model.StudyCafePass;
-import cleancode.studycafe.tobe.model.StudyCafePassType;
+import cleancode.studycafe.tobe.model.*;
 
 import java.util.List;
 
@@ -33,8 +30,11 @@ public class StudyCafePassMachine {
     }
 
     private void calculateStudyCafePrice(StudyCafePassType studyCafePassType) {
+        StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeFileHandler);
+        StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeFileHandler);
+
         if (studyCafePassType == StudyCafePassType.HOURLY) {
-            List<StudyCafePass> hourlyPasses = findStudyCafePasses(StudyCafePassType.HOURLY);
+            List<StudyCafePass> hourlyPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.HOURLY);
 
             outputHandler.showPassListForSelection(hourlyPasses);
 
@@ -44,7 +44,7 @@ public class StudyCafePassMachine {
             return;
         }
         if (studyCafePassType == StudyCafePassType.WEEKLY) {
-            List<StudyCafePass> weeklyPasses = findStudyCafePasses(StudyCafePassType.WEEKLY);
+            List<StudyCafePass> weeklyPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.WEEKLY);
 
             outputHandler.showPassListForSelection(weeklyPasses);
 
@@ -54,17 +54,17 @@ public class StudyCafePassMachine {
             return;
         }
         if (studyCafePassType == StudyCafePassType.FIXED) {
-            List<StudyCafePass> fixedPasses = findStudyCafePasses(StudyCafePassType.FIXED);
+            List<StudyCafePass> fixedPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.FIXED);
 
             outputHandler.showPassListForSelection(fixedPasses);
             StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
 
-            Order order = Order.ofMonthlyWithoutLocker(selectedPass);
+            StudyCafeLockerPass lockerPass = lockerPasses.findStudyCafeLockerPass(selectedPass);
 
-            StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(selectedPass);
             outputHandler.askLockerPass(lockerPass);
 
             boolean lockerSelection = inputHandler.getLockerSelection();
+            Order order = Order.ofMonthlyWithoutLocker(selectedPass);
             if (lockerSelection) {
                 order = Order.ofMonthlyWithLocker(selectedPass, lockerPass);
             }
@@ -72,26 +72,4 @@ public class StudyCafePassMachine {
             outputHandler.showPassOrderSummary(order);
         }
     }
-
-    //todo optional orElse null 수정하기
-    private StudyCafeLockerPass findStudyCafeLockerPass(StudyCafePass selectedPass) {
-        List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
-        StudyCafeLockerPass lockerPass = lockerPasses.stream()
-                .filter(option ->
-                        option.getPassType() == selectedPass.getPassType()
-                                && option.getDuration() == selectedPass.getDuration()
-                )
-                .findFirst()
-                .orElse(null);
-        return lockerPass;
-    }
-
-    private List<StudyCafePass> findStudyCafePasses(StudyCafePassType studyCafePassType) {
-        List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
-
-        return studyCafePasses.stream()
-                .filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
-                .toList();
-    }
-
 }

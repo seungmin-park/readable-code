@@ -16,6 +16,14 @@ public class StudyCafeLockerPass {
         return new StudyCafeLockerPass(passType, duration, price);
     }
 
+    public boolean isSatisfiedAt(StudyCafePass studyCafePass) {
+        return this.passType == studyCafePass.getPassType() && this.duration == studyCafePass.getDuration();
+    }
+
+    public boolean isAvailable() {
+        return duration > 0 && price > 0;
+    }
+
     public StudyCafePassType getPassType() {
         return passType;
     }
@@ -39,9 +47,5 @@ public class StudyCafeLockerPass {
             return String.format("%s주권 - %d원", duration, price);
         }
         return "";
-    }
-
-    public boolean isAvailable() {
-        return duration > 0 && price > 0;
     }
 }
