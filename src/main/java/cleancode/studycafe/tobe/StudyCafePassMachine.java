@@ -33,43 +33,21 @@ public class StudyCafePassMachine {
         StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeFileHandler);
         StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeFileHandler);
 
-        if (studyCafePassType == StudyCafePassType.HOURLY) {
-            List<StudyCafePass> hourlyPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.HOURLY);
+        List<StudyCafePass> selectedPasses = studyCafePasses.findStudyCafePasses(studyCafePassType);
+        outputHandler.showPassListForSelection(selectedPasses);
+        StudyCafePass selectedPass = inputHandler.getSelectPass(selectedPasses);
+        Order order = Order.ofWithoutLocker(selectedPass);
 
-            outputHandler.showPassListForSelection(hourlyPasses);
-
-            StudyCafePass selectedPass = inputHandler.getSelectPass(hourlyPasses);
-            Order order = Order.ofHourly(selectedPass);
-            outputHandler.showPassOrderSummary(order);
-            return;
-        }
-        if (studyCafePassType == StudyCafePassType.WEEKLY) {
-            List<StudyCafePass> weeklyPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.WEEKLY);
-
-            outputHandler.showPassListForSelection(weeklyPasses);
-
-            StudyCafePass selectedPass = inputHandler.getSelectPass(weeklyPasses);
-            Order order = Order.ofWeekly(selectedPass);
-            outputHandler.showPassOrderSummary(order);
-            return;
-        }
-        if (studyCafePassType == StudyCafePassType.FIXED) {
-            List<StudyCafePass> fixedPasses = studyCafePasses.findStudyCafePasses(StudyCafePassType.FIXED);
-
-            outputHandler.showPassListForSelection(fixedPasses);
-            StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
-
+        if (selectedPass.getPassType() == StudyCafePassType.FIXED) {
             StudyCafeLockerPass lockerPass = lockerPasses.findStudyCafeLockerPass(selectedPass);
-
             outputHandler.askLockerPass(lockerPass);
-
             boolean lockerSelection = inputHandler.getLockerSelection();
-            Order order = Order.ofMonthlyWithoutLocker(selectedPass);
-            if (lockerSelection) {
-                order = Order.ofMonthlyWithLocker(selectedPass, lockerPass);
-            }
 
-            outputHandler.showPassOrderSummary(order);
+            if (lockerSelection) {
+                order = Order.ofWithLocker(selectedPass, lockerPass);
+            }
         }
+        outputHandler.showPassOrderSummary(order);
+
     }
 }

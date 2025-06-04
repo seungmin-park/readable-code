@@ -14,19 +14,11 @@ public class Order {
         return new Order(studyCafePass, studyCafeLockerPass);
     }
 
-    public static Order ofHourly(StudyCafePass selectedPass) {
+    public static Order ofWithoutLocker(StudyCafePass selectedPass) {
         return new Order(selectedPass, StudyCafeLockerPass.of(selectedPass.getPassType(), 0, 0));
     }
 
-    public static Order ofWeekly(StudyCafePass selectedPass) {
-        return new Order(selectedPass, StudyCafeLockerPass.of(selectedPass.getPassType(), 0, 0));
-    }
-
-    public static Order ofMonthlyWithoutLocker(StudyCafePass selectedPass) {
-        return new Order(selectedPass, StudyCafeLockerPass.of(selectedPass.getPassType(), 0, 0));
-    }
-
-    public static Order ofMonthlyWithLocker(StudyCafePass selectedPass, StudyCafeLockerPass studyCafeLockerPass) {
+    public static Order ofWithLocker(StudyCafePass selectedPass, StudyCafeLockerPass studyCafeLockerPass) {
         return new Order(selectedPass, studyCafeLockerPass);
     }
 
