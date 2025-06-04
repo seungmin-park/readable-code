@@ -37,24 +37,39 @@ public class StudyCafePassMachine {
     }
 
     private void calculateStudyCafePrice(StudyCafePassType studyCafePassType) {
-        StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeDataReader);
-        StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeDataReader);
-
-        List<StudyCafePass> selectedPasses = studyCafePasses.findStudyCafePasses(studyCafePassType);
-        outputHandler.showPassListForSelection(selectedPasses);
-        StudyCafePass selectedPass = inputHandler.getSelectPass(selectedPasses);
-        Order order = Order.ofWithoutLocker(selectedPass);
-
-        if (selectedPass.isFixed()) {
-            StudyCafeLockerPass lockerPass = lockerPasses.findStudyCafeLockerPass(selectedPass);
-            outputHandler.askLockerPass(lockerPass);
-            boolean lockerSelection = inputHandler.getLockerSelection();
-
-            if (lockerSelection) {
-                order = Order.ofWithLocker(selectedPass, lockerPass);
-            }
-        }
+        StudyCafePass selectedPass = selectPass(studyCafePassType);
+        Order order = createOrderFromPass(selectedPass);
         outputHandler.showPassOrderSummary(order);
+    }
 
+    private StudyCafePass selectPass(StudyCafePassType studyCafePassType) {
+        StudyCafePasses studyCafePasses = StudyCafePasses.from(studyCafeDataReader);
+
+        List<StudyCafePass> filteredPasses = studyCafePasses.findStudyCafePasses(studyCafePassType);
+        outputHandler.showPassListForSelection(filteredPasses);
+        return inputHandler.getSelectPass(filteredPasses);
+    }
+
+    private Order createOrderFromPass(StudyCafePass studyCafePass) {
+        Order order = Order.ofWithoutLocker(studyCafePass);
+
+        if (studyCafePass.isNotFixed()) {
+            return order;
+        }
+
+        StudyCafeLockerPass lockerPass = findLockerPassFor(studyCafePass);
+        outputHandler.askLockerPass(lockerPass);
+
+        boolean lockerSelection = inputHandler.getLockerSelection();
+
+        if (lockerSelection) {
+            return Order.ofWithLocker(studyCafePass, lockerPass);
+        }
+        return order;
+    }
+
+    private StudyCafeLockerPass findLockerPassFor(StudyCafePass selectedPass) {
+        StudyCafeLockerPasses lockerPasses = StudyCafeLockerPasses.from(studyCafeDataReader);
+        return lockerPasses.findStudyCafeLockerPass(selectedPass);
     }
 }
