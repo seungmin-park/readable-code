@@ -4,6 +4,7 @@ import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
 import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.model.Order;
 import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.StudyCafePass;
 import cleancode.studycafe.tobe.model.StudyCafePassType;
@@ -38,7 +39,8 @@ public class StudyCafePassMachine {
             outputHandler.showPassListForSelection(hourlyPasses);
 
             StudyCafePass selectedPass = inputHandler.getSelectPass(hourlyPasses);
-            outputHandler.showPassOrderSummary(selectedPass, null);
+            Order order = Order.ofHourly(selectedPass);
+            outputHandler.showPassOrderSummary(order);
             return;
         }
         if (studyCafePassType == StudyCafePassType.WEEKLY) {
@@ -47,7 +49,8 @@ public class StudyCafePassMachine {
             outputHandler.showPassListForSelection(weeklyPasses);
 
             StudyCafePass selectedPass = inputHandler.getSelectPass(weeklyPasses);
-            outputHandler.showPassOrderSummary(selectedPass, null);
+            Order order = Order.ofWeekly(selectedPass);
+            outputHandler.showPassOrderSummary(order);
             return;
         }
         if (studyCafePassType == StudyCafePassType.FIXED) {
@@ -56,22 +59,21 @@ public class StudyCafePassMachine {
             outputHandler.showPassListForSelection(fixedPasses);
             StudyCafePass selectedPass = inputHandler.getSelectPass(fixedPasses);
 
+            Order order = Order.ofMonthlyWithoutLocker(selectedPass);
+
             StudyCafeLockerPass lockerPass = findStudyCafeLockerPass(selectedPass);
+            outputHandler.askLockerPass(lockerPass);
 
-            boolean lockerSelection = false;
-            if (lockerPass != null) {
-                outputHandler.askLockerPass(lockerPass);
-                lockerSelection = inputHandler.getLockerSelection();
-            }
-
+            boolean lockerSelection = inputHandler.getLockerSelection();
             if (lockerSelection) {
-                outputHandler.showPassOrderSummary(selectedPass, lockerPass);
-                return;
+                order = Order.ofMonthlyWithLocker(selectedPass, lockerPass);
             }
-            outputHandler.showPassOrderSummary(selectedPass, null);
+
+            outputHandler.showPassOrderSummary(order);
         }
     }
 
+    //todo optional orElse null 수정하기
     private StudyCafeLockerPass findStudyCafeLockerPass(StudyCafePass selectedPass) {
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
         StudyCafeLockerPass lockerPass = lockerPasses.stream()

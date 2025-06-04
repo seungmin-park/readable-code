@@ -1,5 +1,6 @@
 package cleancode.studycafe.tobe.io;
 
+import cleancode.studycafe.tobe.model.Order;
 import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.StudyCafePass;
 
@@ -48,22 +49,19 @@ public class OutputHandler {
         System.out.println("1. 예 | 2. 아니오");
     }
 
-    public void showPassOrderSummary(StudyCafePass selectedPass, StudyCafeLockerPass lockerPass) {
+    public void showPassOrderSummary(Order order) {
         System.out.println();
         System.out.println("이용 내역");
-        System.out.println("이용권: " + selectedPass.display());
-        if (lockerPass != null) {
-            System.out.println("사물함: " + lockerPass.display());
+        System.out.println("이용권: " + order.displayStudyCafePass());
+        if (order.hasLockerPass()) {
+            System.out.println("사물함: " + order.displayLockerPass());
         }
 
-        double discountRate = selectedPass.getDiscountRate();
-        int discountPrice = (int) (selectedPass.getPrice() * discountRate);
-        if (discountPrice > 0) {
-            System.out.println("이벤트 할인 금액: " + discountPrice + "원");
+        if (order.hasDiscount()) {
+            System.out.println("이벤트 할인 금액: " + order.calculateDiscountPrice() + "원");
         }
 
-        int totalPrice = selectedPass.getPrice() - discountPrice + (lockerPass != null ? lockerPass.getPrice() : 0);
-        System.out.println("총 결제 금액: " + totalPrice + "원");
+        System.out.println("총 결제 금액: " + order.calculateTotalPrice() + "원");
         System.out.println();
     }
 

@@ -41,4 +41,7 @@ public class StudyCafeLockerPass {
         return "";
     }
 
+    public boolean isAvailable() {
+        return duration > 0 && price > 0;
+    }
 }
