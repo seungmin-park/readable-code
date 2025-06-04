@@ -11,8 +11,8 @@ import java.util.List;
 public class StudyCafePassMachine {
 
     private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
-    private final InputHandler inputHandler = new InputHandler();
-    private final OutputHandler outputHandler = new OutputHandler();
+    private final InputHandler inputHandler = new ConsoleInputHandler();
+    private final OutputHandler outputHandler = new ConsoleOutputHandler();
 
     public void run() {
         try {
