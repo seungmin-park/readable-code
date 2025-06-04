@@ -24,11 +24,10 @@ public class StudyCafePassMachine {
             StudyCafePass selectedPass = selectPass();
             Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
 
-            if (optionalLockerPass.isPresent()) {
-                outputHandler.showPassOrderSummary(selectedPass, optionalLockerPass.get());
-            } else {
-                outputHandler.showPassOrderSummary(selectedPass, null);
-            }
+            optionalLockerPass.ifPresentOrElse(
+                    lockerPass -> outputHandler.showPassOrderSummary(selectedPass, lockerPass),
+                    () -> outputHandler.showPassOrderSummary(selectedPass, null)
+            );
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
