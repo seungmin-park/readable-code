@@ -27,15 +27,15 @@ public class Order {
 
     public boolean validateOrder(Order order) {
         if (order.hasItem()) {
-            log.info("주문 항목이 없습니다.");
+            System.out.println("주문 항목이 없습니다.");
             return false;
         }
         if (order.isCustomerInfoMissing()) {
-            log.info("사용자 정보가 없습니다.");
+            System.out.println("사용자 정보가 없습니다.");
             return false;
         }
         if (order.hasInValidTotalPrice()) {
-            log.info("올바르지 않은 총 가격입니다.");
+            System.out.println("올바르지 않은 총 가격입니다.");
             return false;
         }
 
